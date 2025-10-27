@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1.0">
+  <processor type="stm32f103r6" frequency="8.000000"/>
+  <files>
+    <file name="main.c"/>
+  </files>
+  <libs/>
+  <boards>
+    <board name="Mcore1 stm32f103r6"/>
+  </boards>
+  <parts>
+    <part name="Resistor" pos="380,260">
+      <property name="Resistance">220</property>
+    </part>
+    <part name="LED" pos="380,220">
+      <property name="Color">red</property>
+    </part>
+    <part name="Switch" pos="200,260">
+      <property name="size">1</property>
+    </part>
+  </parts>
+  <connections>
+    <connection pin1="GPIOC.13" pin2="U1.1"/>
+    <connection pin1="GPIOB.1" pin2="U1.2"/>
+    <connection pin1="P1.1" pin2="U1.3"/>
+    <connection pin1="P2.1" pin2="U1.4"/>
+  </connections>
+</project>
