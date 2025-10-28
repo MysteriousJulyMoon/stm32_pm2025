@@ -1,81 +1,56 @@
 #include <stdint.h>
 #include <stm32f10x.h>
 
-volatile uint32_t current_delay = 100000;
-volatile uint8_t button_a_pressed = 0;
-volatile uint8_t button_c_pressed = 0;
+volatile uint32_t delay_time = 180000000;
+volatile uint32_t speeds[] = {180000000, 90000000, 45000000, 22500000, 11250000};
+volatile uint8_t speed_index = 0;
+volatile uint8_t button_was_pressed = 0;
 
+uint8_t is_button_pressed() {
+    if ((GPIOA->IDR & GPIO_IDR_IDR0) == 0) {
+        if(!button_was_pressed) {
+            button_was_pressed = 1;
+            return 1;
+        }
+    } else {
+        button_was_pressed = 0;
+    }
+    return 0;
+}
 
 void delay(uint32_t ticks) {
-    for (uint32_t i = 0; i < ticks; i++) {
-        __NOP();
-    }
+	for (int i = 0; i < ticks; i++) {
+		__NOP();
+	}
 }
 
-
-uint8_t read_joystick_button(char button) {
-    // Кнопка A - PB0
-    // Кнопка C - PB2
-    switch(button) {
-        case 'A': return (GPIOB->IDR & GPIO_IDR_IDR0) == 0;  
-        case 'C': return (GPIOB->IDR & GPIO_IDR_IDR2) == 0; 
-        default: return 0;
+void try_change_frequency() {
+    if (is_button_pressed()) {
+        speed_index = (speed_index + 1) % 5;
+        delay_time = speeds[speed_index];
     }
+    delay(300000);
 }
 
-
-void change_frequency(char button) {
-    if (button == 'A' && !button_a_pressed) {
-        // Увеличиваем частоту в 2 раза (уменьшаем задержку)
-        if (current_delay > 100) {  // Минимальная задержка
-            current_delay /= 2;
-            button_a_pressed = 1;  // Больше не реагируем на кнопку A
-        }
-    }
-    else if (button == 'C' && !button_c_pressed) {
-    
-        if (current_delay < 6400000) {  
-            current_delay *= 2;
-            button_c_pressed = 1;  
-        }
+void delay_with_check(uint32_t ticks) {
+	uint32_t checks_count = delay_time / 300000;
+    for (int i = 0; i < checks_count; i++) {
+        try_change_frequency();
     }
 }
-
 
 int main(void) {
+    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN | RCC_APB2ENR_IOPCEN;
+    
+    GPIOC->CRH &= ~(GPIO_CRH_CNF13 | GPIO_CRH_MODE13);
+    GPIOC->CRH |= GPIO_CRH_MODE13_1;
 
-    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;  // Для светодиода (PC13)
-    RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;  // Для кнопок джойстика (PB0, PB2)
+    GPIOA->CRL &= ~(GPIO_CRL_CNF0 | GPIO_CRL_MODE0);
+    GPIOA->CRL |= GPIO_CRL_CNF0_1;
+    GPIOA->ODR |= GPIO_ODR_ODR0;
     
-    GPIOC->CRH &= ~GPIO_CRH_CNF13;
-    GPIOC->CRH |= GPIO_CRH_MODE13_0;
-    
-    // Настраиваем PB0 и PB2 как входы для кнопок
-    // CNF = 01 (Input floating), MODE = 00 (Input)
-    GPIOB->CRL &= ~(GPIO_CRL_CNF0 | GPIO_CRL_MODE0);  // PB0
-    GPIOB->CRL |= GPIO_CRL_CNF0_0;
-    
-    GPIOB->CRL &= ~(GPIO_CRL_CNF2 | GPIO_CRL_MODE2);  // PB2  
-    GPIOB->CRL |= GPIO_CRL_CNF2_0; 
-
-    while (1) {
-        if (read_joystick_button('A')) {
-            change_frequency('A');
-            while (read_joystick_button('A')) {
-                delay(1000);
-            }
-        }
-        
-        if (read_joystick_button('C')) {
-            change_frequency('C');
-            while (read_joystick_button('C')) {
-                delay(1000);
-            }
-        }
-        
-        GPIOC->ODR |= (1U << 13U);  
-        delay(current_delay);
-        GPIOC->ODR &= ~(1U << 13U); 
-        delay(current_delay);
+    while(1) {
+        GPIOC->ODR ^= GPIO_ODR_ODR13;
+        delay_with_check(delay_time);
     }
 }
