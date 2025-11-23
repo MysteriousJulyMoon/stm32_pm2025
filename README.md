@@ -42,3 +42,32 @@ To build project run: "Terminal->Run Build task->Cmake: build"
 Project can be rebuild with "Cmake: clean rebuild"
 
 Also you can build artifacts (bin/hex/elf) from CMake extension tab.
+
+# Lab 4 work: Connecting SSD1306 drive to SPI
+
+## Project Description
+The PicSimLab project is designed to connect an SSD1306 OLED display to a PIC18F4620 microcontroller via the built-in SPI.
+
+## Functionality
+- Libraries for working with SPI
+- SSD1306 disk driver
+- Chessboard display
+- Test graphic patterns
+- Automatic mode change
+
+## Project structure
+- `psim/spi_display.pzw` - PicSimLab project
+- `src/spi_display.c' - the main source code
+- `src/ssd1306.h' - file header
+- `Makefile` - for creating a project
+
+## Connection diagram
+- SCK (SPI clock frequency) → RC3
+- SDO (MOSI) → RC5
+- CS (chip selection) → RA0
+- DC (data/command) → RA1
+- RES (reset) → RA2
+
+## Compilation
+of `
+bashly do
