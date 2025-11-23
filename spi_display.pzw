@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pcb version="1.5.2">
+  <parts>
+    <part name="Board1" type="1106"/>
+    <part name="MCU1" type="PIC18F4620"/>
+    <part name="J1" type="SSD1306"/>
+    <part name="R1" type="resistor:1k"/>
+    <part name="R2" type="resistor:1k"/>
+    <part name="R3" type="resistor:1k"/>
+    <part name="R4" type="resistor:1k"/>
+    <part name="R5" type="resistor:1k"/>
+  </parts>
+  <parts_pos>
+    <part name="Board1" x="5.000000" y="5.000000" z="0.000000" angle="0.000000"/>
+    <part name="MCU1" x="8.000000" y="11.000000" z="0.000000" angle="0.000000"/>
+    <part name="J1" x="22.000000" y="11.000000" z="0.000000" angle="0.000000"/>
+    <part name="R1" x="14.000000" y="8.000000" z="0.000000" angle="0.000000"/>
+    <part name="R2" x="14.000000" y="10.000000" z="0.000000" angle="0.000000"/>
+    <part name="R3" x="14.000000" y="12.000000" z="0.000000" angle="0.000000"/>
+    <part name="R4" x="14.000000" y="14.000000" z="0.000000" angle="0.000000"/>
+    <part name="R5" x="14.000000" y="16.000000" z="0.000000" angle="0.000000"/>
+  </parts_pos>
+  <parts_prop>
+    <part name="MCU1">
+      <prop name="freq" value="20.000000"/>
+      <prop name="pins" value="1"/>
+      <prop name="file" value="spi_display.hex"/>
+    </part>
+    <part name="J1">
+      <prop name="model" value="128x64"/>
+      <prop name="color" value="1"/>
+    </part>
+    <part name="R1">
+      <prop name="value" value="1000.000000"/>
+    </part>
+    <part name="R2">
+      <prop name="value" value="1000.000000"/>
+    </part>
+    <part name="R3">
+      <prop name="value" value="1000.000000"/>
+    </part>
+    <part name="R4">
+      <prop name="value" value="1000.000000"/>
+    </part>
+    <part name="R5">
+      <prop name="value" value="1000.000000"/>
+    </part>
+  </parts_prop>
+  <parts_val/>
+  <parts_links>
+    <link part="MCU1" pin="40" part2="Board1" pin="pwr"/>
+    <link part="MCU1" pin="39" part2="R1" pin="1"/>
+    <link part="MCU1" pin="38" part2="R2" pin="1"/>
+    <link part="MCU1" pin="37" part2="R3" pin="1"/>
+    <link part="MCU1" pin="36" part2="R4" pin="1"/>
+    <link part="MCU1" pin="35" part2="R5" pin="1"/>
+    <link part="MCU1" pin="12" part2="Board1" pin="gnd"/>
+    <link part="R1" pin="2" part2="J1" pin="3"/>
+    <link part="R2" pin="2" part2="J1" pin="4"/>
+    <link part="R3" pin="2" part2="J1" pin="6"/>
+    <link part="R4" pin="2" part2="J1" pin="7"/>
+    <link part="R5" pin="2" part2="J1" pin="8"/>
+    <link part="J1" pin="1" part2="Board1" pin="pwr"/>
+    <link part="J1" pin="2" part2="Board1" pin="gnd"/>
+  </parts_links>
+</pcb>
